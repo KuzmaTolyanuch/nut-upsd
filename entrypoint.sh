@@ -57,10 +57,8 @@
 #   touch /etc/nut/.setup
 # fi
 
-chgrp $GROUP /etc/nut
-chmod 640 /etc/nut
-chgrp $GROUP /etc/nut/*
-chmod 640 /etc/nut/*
+chgrp -R $GROUP /etc/nut
+chmod -R 640 /etc/nut
 mkdir -p -m 2750 /dev/shm/nut
 chown $USER.$GROUP /dev/shm/nut
 [ -e /var/run/nut ] || ln -s /dev/shm/nut /var/run

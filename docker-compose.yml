@@ -1,7 +1,7 @@
 version: '3'
 services:
   app:
-    image: 'instantlinux/nut-upsd'
+    image: 'nut-upsd'
     restart: unless-stopped
     hostname: Nut
     ports:
