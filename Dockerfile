@@ -1,34 +1,23 @@
-FROM alpine:3.15
-MAINTAINER Rich Braun "docker@instantlinux.net"
-ARG BUILD_DATE
-ARG VCS_REF
-LABEL org.label-schema.build-date=$BUILD_DATE \
-    org.label-schema.license=GPL-2.0 \
-    org.label-schema.name=nut-upsd \
-    org.label-schema.vcs-ref=$VCS_REF \
-    org.label-schema.vcs-url=https://github.com/instantlinux/docker-tools
-ARG NUT_VERSION=2.8.0-r0
-ENV API_USER=upsmon \
-    API_PASSWORD= \
-    DESCRIPTION=UPS \
-    DRIVER=usbhid-ups \
-    GROUP=nut \
-    NAME=ups \
-    POLLINTERVAL= \
-    PORT=auto \
-    SDORDER= \
-    SECRET=nut-upsd-password \
-    SERIAL= \
-    SERVER=master \
-    USER=nut \
-    VENDORID=
-HEALTHCHECK CMD upsc ups@localhost:3493 2>&1|grep -q stale && exit 1 || true
+FROM alpine:edge
 
-RUN echo '@edge http://dl-cdn.alpinelinux.org/alpine/edge/community' \
-      >>/etc/apk/repositories && \
-    apk add --update nut@edge=$NUT_VERSION \
-      libcrypto1.1 libssl1.1 musl net-snmp-libs
+# add usb access group
+ARG EXTRA_GROUP=dialout
+
+RUN apk add --allow-untrusted --no-cache nut shadow --repository https://dl-cdn.alpinelinux.org/alpine/edge/community 
+
+# rename included config files to .sample, bail out with failure if /etc/nut would not exist
+RUN [ -d /etc/nut ] && find /etc/nut/ -type f -exec mv {} {}.sample \; || false
+
+COPY startup.sh /startup.sh
+
+RUN chmod 700 /startup.sh
+
+RUN mkdir -p /var/run/nut && \
+    chown nut:nut /var/run/nut && \
+    chmod 700 /var/run/nut
+
+RUN usermod -a -G $EXTRA_GROUP nut
+
+ENTRYPOINT ["/startup.sh"]
 
 EXPOSE 3493
-COPY entrypoint.sh /usr/local/bin/
-ENTRYPOINT /usr/local/bin/entrypoint.sh

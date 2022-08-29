@@ -1,3 +1,10 @@
-[user]
-  password = Pass
+# an example user list, which references the ACL from upsd.conf
+
+# PLEASE NOTE: THIS IS AN EXAMPLE ONLY AND ABSOLUTELY INSECURE
+# YOU MUST CHANGE THE ACL TO MATCH YOUR SPECIFIC NEEDS.
+
+
+[kuzma]
+  password = Vakenator1990
   admin master
+	

@@ -5,9 +5,8 @@ services:
     restart: unless-stopped
     hostname: Nut
     ports:
-        - '3494:3493'
+      - '3493:3493'
     devices:
       - /dev/ttyUSB1:/dev/ttyUSB1
     volumes:
-      - /docker/nut/config/:/etc/nut/
-    privileged: true
+      - /docker/nut/config:/etc/nut
