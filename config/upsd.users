@@ -4,7 +4,7 @@
 # YOU MUST CHANGE THE ACL TO MATCH YOUR SPECIFIC NEEDS.
 
 
-[kuzma]
-  password = Vakenator1990
+[user]
+  password = pass
   admin master
 	
